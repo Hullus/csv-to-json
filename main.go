@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/bytedance/gopkg/util/logger"
@@ -14,8 +15,8 @@ import (
 // კონტროლერი დავამტოთ რიც გადასცემს პასუხად? მოდი ეგრე ვქნათ.
 // გადავწყვიტე CLI-ზე იყოსთქო.
 func main() {
-	for _, response := range jsonMapper() {
-		fmt.Println(response)
+	for _, record := range jsonMapper() {
+		record.print(os.Stdout)
 	}
 }
 
@@ -24,6 +25,14 @@ type DataResponse struct {
 	Name     string `json:"name"`
 	Lastname string `json:"lastname"`
 	Job      string `json:"job"`
+}
+
+func (d *DataResponse) print(w io.Writer) {
+	fmt.Println("============================================")
+	_, _ = fmt.Fprintf(w, "Name:     %s\n", d.Name)
+	_, _ = fmt.Fprintf(w, "Lastname: %s\n", d.Lastname)
+	_, _ = fmt.Fprintf(w, "Date:     %s\n", d.Date)
+	_, _ = fmt.Fprintf(w, "Job:      %s\n", d.Job)
 }
 
 func jsonMapper() []DataResponse {
